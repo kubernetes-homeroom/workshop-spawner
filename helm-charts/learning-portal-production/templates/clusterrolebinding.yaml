@@ -1,0 +1,67 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-basic
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.spawner_role }}
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+  namespace: {{ .Values.spawner_namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-extra
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-extra
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+  namespace: {{ .Values.spawner_namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-rules
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-rules
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+  namespace: {{ .Values.spawner_namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-session-rules
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-session-rules
+subjects:
+- kind: ServiceAccount
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+  namespace: {{ .Values.spawner_namespace }}

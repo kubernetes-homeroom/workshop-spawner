@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+        class: spawner
+        deployment: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+        spawner: learning-portal
+    spec:
+      containers:
+      - name: spawner
+        image: {{ .Values.spawner_image }}
+        imagePullPolicy: Always
+        env:
+        - name: CONFIGURATION_TYPE
+          value: learning-portal
+        - name: APPLICATION_NAME
+          value: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+        - name: WORKSHOP_NAME
+          value: {{ .Values.workshop_name }}
+        - name: HOMEROOM_NAME
+          value: {{ .Values.homeroom_name }}
+        - name: SPAWNER_PASSWORD
+          value: {{ .Values.spawner_password | quote}}
+        - name: WORKSHOP_IMAGE
+          value: {{ .Values.workshop_image | quote }}
+        - name: SERVER_LIMIT
+          value: {{ .Values.server_limit | quote }}
+        - name: WORKSHOP_MEMORY
+          value: {{ .Values.workshop_memory | quote }}
+        - name: CONSOLE_MEMORY
+          value: {{ .Values.console_memory | quote }}
+        - name: CONSOLE_BRANDING
+          value: {{ .Values.console_branding | quote }}
+        - name: CONSOLE_IMAGE
+          value: {{ .Values.console_image | quote }}
+        - name: IDLE_TIMEOUT
+          value: {{ .Values.idle_timeout | quote }}
+        - name: MAX_SESSION_AGE
+          value: {{ .Values.max_session_age | quote }}
+        - name: RESOURCE_BUDGET
+          value: {{ .Values.resource_budget | quote }}
+        - name: DOWNLOAD_URL
+          value: {{ .Values.download_url | quote }}
+        - name: WORKSHOP_FILE
+          value: {{ .Values.workshop_file | quote }}
+        - name: OC_VERSION
+          value: {{ .Values.oc_version | quote }}
+        - name: ODO_VERSION
+          value: {{ .Values.odo_version | quote }}
+        - name: KUBECTL_VERSION
+          value: {{ .Values.kubectl_version | quote }}
+        - name: EXPOSED_PORTS
+          value: {{ .Values.exposed_ports | quote}}
+        - name: HOMEROOM_LINK
+          value: {{ .Values.homeroom_link | quote}}
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /hub/api
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: spawner
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /hub/api
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: {{ .Values.spawner_memory }}
+          requests:
+            memory: {{ .Values.spawner_memory }}
+        volumeMounts:
+        - mountPath: /opt/app-root/configs
+          name: configs
+        - mountPath: /opt/app-root/resources
+          name: resources
+      serviceAccountName: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-configs
+        name: configs
+      - configMap:
+          defaultMode: 420
+          name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-session-resources
+        name: resources
