@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  jupyterhub_config.py: {{ .Values.jupyterhub_config }}
+  jupyterhub_config.sh: {{ .Values.jupyterhub_envvars }}
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-configs
+---
+apiVersion: v1
+data:
+  extra_resources.json: {{ .Values.extra_resources }}
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-session-resources
+---
+apiVersion: v1
+data:
+  gateway.sh: {{ .Values.gateway_envvars }}
+  terminal.sh: {{ .Values.terminal_envvars }}
+  workshop.sh: {{ .Values.workshop_envvars }}
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-session-envvars

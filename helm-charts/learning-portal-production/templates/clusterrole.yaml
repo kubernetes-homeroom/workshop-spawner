@@ -1,0 +1,86 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-extra
+rules:
+- apiGroups:
+  - ""
+  - authorization.openshift.io
+  - rbac.authorization.k8s.io
+  resourceNames:
+  - view
+  - edit
+  - admin
+  resources:
+  - clusterroles
+  - roles
+  verbs:
+  - bind
+- apiGroups:
+  - ""
+  - authorization.openshift.io
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrole
+  - clusterrolebindings
+  - rolebindings
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - limitranges
+  - resourcequotas
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-spawner-rules
+rules: {{ .Values.spawner_rules }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: {{ .Values.name_prefix }}{{ .Values.workshop_name }}
+    class: spawner
+    spawner: learning-portal
+  name: {{ .Values.name_prefix }}{{ .Values.workshop_name }}-session-rules
+rules: {{ .Values.session_rules }}
